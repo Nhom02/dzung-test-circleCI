@@ -1,26 +1,163 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
+orbs:
+  node: circleci/node@4.7.0
+  android: circleci/android@1.0.3
+  rn: react-native-community/react-native@7.0.0
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+android_defaults: &android_defaults
+  working_directory: ~/driver-react-native/android
+  docker:
+    - image: farwayer/react-native
+  environment:
+    - LANG: 'en_US.UTF-8'
+    - JAVA_OPTS: '-Xms512m -Xmx2g'
+    - GRADLE_OPTS: '-Xmx3g -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx2g -XX:+HeapDumpOnOutOfMemoryError"'
+    - BUILD_THREADS: 2
+
+ios_defaults: &ios_defaults
+  working_directory: ~/driver-react-native/ios
+  macos:
+    xcode: '12.4.0'
+  environment:
+    - LANG: 'en_US.UTF-8'
+
+commands:
+  last-commit:
+    steps:
+      - run:
+          name: 'Get last commit'
+          command: echo "export LAST_COMMIT=$(git rev-parse --verify HEAD)" >> $BASH_ENV
+
+  detox_build_android:
+    steps:
+      - android/restore-gradle-cache
+      - run: |
+          npm install -g detox-cli react-native-cli
+          detox build --configuration android
+          cd android/app/build/outputs/apk && ls
+      - android/save-gradle-cache
+
+  start_react_native:
+    steps:
+      - run:
+          background: true
+          command: >
+              yarn start
+
+  adb_reserve:
+    steps:
+      - run: |
+          lsof -i -P -n | grep 8081
+          adb devices -l
+          adb reverse tcp:8081 tcp:8081
+
+  detox_build_ios:
+    steps:
+      - restore_cache:
+          keys: 
+            - ios-build-cache-{{ arch }}-{{ checksum "~/.tmp/checksumfiles/package.json" }}
+      - run: |
+          npm install -g detox-cli react-native-cli
+          xcodebuild -workspace ios/yojeeDriverApp.xcworkspace -scheme YojeeDev -sdk iphonesimulator -derivedDataPath ios/build
+      - save_cache:
+          key: ios-build-cache-{{ arch }}-{{ checksum "~/.tmp/checksumfiles/package.json" }}
+          paths:
+            - ios/build/Build
+
+
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  generate-new-tag:
+    <<: *ios_defaults
+    steps:
+      - run: echo 'chruby ruby-2.6' >> ~/.bash_profile
+
+      - run: gem install bundler
+
+      - attach_workspace:
+          at: ~/driver-react-native
+
+      - restore_cache:
+          key: bundle-{{ .Environment.CACHE_VERSION }}-{{ checksum "Gemfile.lock" }}-{{ arch }}
+
+      - run: bundle check || bundle install --path vendor/bundle --clean
+
+      - save_cache:
+          key: bundle-{{ .Environment.CACHE_VERSION }}-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          name: 'Generate new Github release tag'
+          command: bundle exec fastlane generate_github_release
+
+  setup_node:
+    working_directory: ~/driver-react-native
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: cimg/node:12.16
+
+    steps:
+      - last-commit
+
+      - checkout:
+          path: ~/driver-react-native
+
+      - attach_workspace:
+          at: ~/driver-react-native
+
+      - restore_cache:
+          key: yarn-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}-{{ arch }}
+
+      - run: yarn install
+
+      - persist_to_workspace:
+          root: ~/driver-react-native
+          paths:
+            - .
+
+  detox_android:
+    executor:
+      name: android/android-machine
+      resource-class: large
     steps:
       - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+      - node/install-yarn
+      - rn/yarn_install
+      - rn/android_emulator_start:
+          device_name: Pixel_5_API_32
+      - detox_build_android
+      - start_react_native
+      - run:  |
+            detox test -c android
+      - store_artifacts:
+          path: e2e/cucumber-json
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+  detox_ios:
+    executor:
+      name: rn/macos
+      xcode_version: 12.5.1
+    steps:
+      - checkout
+      - rn/setup_macos_executor
+      - rn/yarn_install:
+          cache_folder: ~/.cache/yarn
+      - rn/pod_install
+      - rn/ios_simulator_start:
+          device: iPhone 12
+      - start_react_native
+      - detox_build_ios
+      - run: DETOX_CONFIGURATION=ios.sim.release npx cucumber-js
+      - store_artifacts:
+          path: e2e/cucumber-json
+
 workflows:
-  say-hello-workflow:
+  e2e:
     jobs:
-      - say-hello
+      - detox_android:
+      # - detox_ios:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - /detox_automation\/qa.*/
