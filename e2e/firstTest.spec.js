@@ -4,7 +4,7 @@ describe('Example', () => {
   // });
 
   beforeEach(async () => {
-    await device.reverseTcpPort(8081)
+    // await device.reverseTcpPort(8081)
     await device.launchApp();
     // await device.reloadReactNative();
   });
