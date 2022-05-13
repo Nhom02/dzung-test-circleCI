@@ -4,16 +4,6 @@ orbs:
   android: circleci/android@1.0.3
   rn: react-native-community/react-native@7.0.0
 
-android_defaults: &android_defaults
-  working_directory: ~/driver-react-native/android
-  docker:
-    - image: farwayer/react-native
-  environment:
-    - LANG: 'en_US.UTF-8'
-    - JAVA_OPTS: '-Xms512m -Xmx2g'
-    - GRADLE_OPTS: '-Xmx3g -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx2g -XX:+HeapDumpOnOutOfMemoryError"'
-    - BUILD_THREADS: 2
-
 commands:
   last-commit:
     steps:
@@ -59,30 +49,6 @@ commands:
 
 
 jobs:
-  generate-new-tag:
-    <<: *ios_defaults
-    steps:
-      - run: echo 'chruby ruby-2.6' >> ~/.bash_profile
-
-      - run: gem install bundler
-
-      - attach_workspace:
-          at: ~/driver-react-native
-
-      - restore_cache:
-          key: bundle-{{ .Environment.CACHE_VERSION }}-{{ checksum "Gemfile.lock" }}-{{ arch }}
-
-      - run: bundle check || bundle install --path vendor/bundle --clean
-
-      - save_cache:
-          key: bundle-{{ .Environment.CACHE_VERSION }}-{{ checksum "Gemfile.lock" }}-{{ arch }}
-          paths:
-            - vendor/bundle
-
-      - run:
-          name: 'Generate new Github release tag'
-          command: bundle exec fastlane generate_github_release
-
   setup_node:
     working_directory: ~/driver-react-native
     docker:
