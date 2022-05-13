@@ -114,7 +114,7 @@ jobs:
 workflows:
   e2e:
     jobs:
-      - detox_android:
+      - detox_android
       # - detox_ios:
       #     filters:
       #       branches:
