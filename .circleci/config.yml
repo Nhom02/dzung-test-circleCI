@@ -89,9 +89,9 @@ jobs:
       - detox_build_android
       - start_react_native
       - run:  |
-            detox test -c android
+            detox test -c android --loglevel trace --record-videos all
       - store_artifacts:
-          path: e2e/cucumber-json
+          path: artifacts
 
   detox_ios:
     executor:
