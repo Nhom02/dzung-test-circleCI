@@ -14,13 +14,6 @@ android_defaults: &android_defaults
     - GRADLE_OPTS: '-Xmx3g -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx2g -XX:+HeapDumpOnOutOfMemoryError"'
     - BUILD_THREADS: 2
 
-ios_defaults: &ios_defaults
-  working_directory: ~/driver-react-native/ios
-  macos:
-    xcode: '12.4.0'
-  environment:
-    - LANG: 'en_US.UTF-8'
-
 commands:
   last-commit:
     steps:
