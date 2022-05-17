@@ -187,6 +187,7 @@ jobs:
           # For my app and react native in general java8 is needed. The default version on this executor was default to java10 for some reason, so this kinda solve that issue.
           # just installing java, android sdk, and needed tools.
           command: >
+            echo $ANDROID_HOME
             java -version
             brew tap adoptopenjdk/openjdk
             brew install --cask adoptopenjdk/openjdk/adoptopenjdk8
