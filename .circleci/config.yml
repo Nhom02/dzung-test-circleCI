@@ -103,8 +103,9 @@ commands:
       - run:
           command: >-
             avdmanager create avd --force --name <<parameters.device_name>>
+            --abi google_apis/x86_64
             --package "system-images;<<parameters.platform_version>>;google_apis;x86_64"
-            --tag default --device pixel
+            --device "Pixel 5"
           name: Create Android Emulator
       - run:
           background: true
