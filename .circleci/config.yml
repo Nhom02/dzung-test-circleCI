@@ -80,7 +80,7 @@ commands:
             yes | sdkmanager "platform-tools" "tools" >/dev/null
 
             yes | sdkmanager "platforms;<<parameters.platform_version>>"
-            "system-images;<<parameters.platform_version>>;default;x86_64"
+            "system-images;<<parameters.platform_version>>;google_apis;x86_64"
             >/dev/null
 
             yes | sdkmanager "emulator" --channel=3 >/dev/null
