@@ -173,7 +173,6 @@ jobs:
   detox_android:
     executor:
       name: rn/macos
-      resource-class: large
     steps:
       - attach_workspace:
           at: .
