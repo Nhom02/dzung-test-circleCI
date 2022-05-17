@@ -86,7 +86,7 @@ jobs:
       - rn/yarn_install
       - rn/android_emulator_start:
           device_name: Pixel_5_API_32
-          platform_version: android-30
+          platform_version: android-32
           build_tools_version: 30.0.0
       # - detox_build_android
       # - start_react_native
