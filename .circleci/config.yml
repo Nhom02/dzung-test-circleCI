@@ -86,13 +86,15 @@ jobs:
       - rn/yarn_install
       - rn/android_emulator_start:
           device_name: Pixel_5_API_32
-      - detox_build_android
-      - start_react_native
-      - run:  |
-            detox test -c android --loglevel trace --record-videos all
-      - run: node e2e/generate_cucumber_html_report
-      - store_artifacts:
-          path: e2e/cucumber-report
+          platform_version: android-30;google_apis
+          build_tools_version: 30.0.0
+      # - detox_build_android
+      # - start_react_native
+      # - run:  |
+      #       detox test -c android --loglevel trace --record-videos all
+      # - run: node e2e/generate_cucumber_html_report
+      # - store_artifacts:
+      #     path: e2e/cucumber-report
 
   detox_ios:
     executor:
