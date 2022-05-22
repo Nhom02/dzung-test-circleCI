@@ -179,12 +179,13 @@ jobs:
       - rn/setup_macos_executor:
           homebrew_cache: true
           node_version: "12"
+      - rn/yarn_install
       - rn/android_emulator_start:
           device_name: Pixel_5_API_32
           build_tools_version: 30.0.0
           platform_version: android-30
-      - detox_build_android
-      # - rn/yarn_install:
+      # - detox_build_android
+      # - rn/yarn_install
       #     # basically because of this https://github.com/react-native-community/react-native-circleci-orb/issues/66
       #     cache: false
 
@@ -260,7 +261,7 @@ jobs:
       #     name: Wait for AVD to be ready
       #     no_output_timeout: 5m
       # Creates the detox build using the orb job
-      # - detox_build_android
+      - detox_build_android
       - start_react_native
       - run:  |
             detox test -c android --loglevel trace --record-videos all
