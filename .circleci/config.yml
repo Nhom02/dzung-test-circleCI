@@ -215,9 +215,9 @@ jobs:
       #       yes | sdkmanager --list
       #     name: Install Android Emulator
       #     shell: /bin/bash -e
-      # - add_ssh_keys:
-      #     fingerprints:
-      #       - "33:80:f5:7a:73:07:39:1e:d1:c4:59:ea:5b:da:5d:12"
+      - add_ssh_keys:
+          fingerprints:
+            - "33:80:f5:7a:73:07:39:1e:d1:c4:59:ea:5b:da:5d:12"
       # - run:
       #     command: |
       #       adb start-server
