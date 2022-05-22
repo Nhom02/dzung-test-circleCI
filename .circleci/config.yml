@@ -206,7 +206,7 @@ jobs:
           shell: /bin/bash -e
       - add_ssh_keys:
           fingerprints:
-            - "d2:ac:60:82:65:bb:44:0e:ab:50:dc:d7:71:a9:1c:a2"
+            - "33:80:f5:7a:73:07:39:1e:d1:c4:59:ea:5b:da:5d:12"
       - run:
           command: |
             adb start-server
