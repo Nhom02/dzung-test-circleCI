@@ -179,89 +179,94 @@ jobs:
       - rn/setup_macos_executor:
           homebrew_cache: true
           node_version: "12"
-      - rn/yarn_install:
-          # basically because of this https://github.com/react-native-community/react-native-circleci-orb/issues/66
-          cache: false
+      - rn/android_emulator_start:
+          device_name: Pixel_5_API_32
+          build_tools_version: 30.0.0
+          platform_version: android-32
+      - detox_build_android
+      # - rn/yarn_install:
+      #     # basically because of this https://github.com/react-native-community/react-native-circleci-orb/issues/66
+      #     cache: false
 
-      - run:
-          # For my app and react native in general java8 is needed. The default version on this executor was default to java10 for some reason, so this kinda solve that issue.
-          # just installing java, android sdk, and needed tools.
-          command: >
-            echo $ANDROID_HOME
-            java -version
-            brew tap adoptopenjdk/openjdk
-            brew install --cask adoptopenjdk/openjdk/adoptopenjdk8
-            java -version
-            export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-            brew install --cask android-sdk
-            export ANDROID_HOME=/usr/local/share/android-sdk
-            export PATH=$PATH:$ANDROID_HOME/platform-tools
-            export PATH=$PATH:$ANDROID_HOME/tools
-            export PATH=$PATH:$ANDROID_HOME/tools/bin
-            export PATH=$PATH:$ANDROID_HOME/emulator
-            mkdir -p ~/.android && touch ~/.android/repositories.cfg
-            java -version
-            yes | sdkmanager "platform-tools" "tools" >/dev/null
-            yes | sdkmanager "platforms;android-29"
-            "system-images;android-29;default;x86_64" >/dev/null
-            yes | sdkmanager "emulator" --channel=3 >/dev/null
-            yes | sdkmanager "build-tools;29.0.2" >/dev/null
-            yes | sdkmanager --licenses >/dev/null
-            yes | sdkmanager --list
-          name: Install Android Emulator
-          shell: /bin/bash -e
-      - add_ssh_keys:
-          fingerprints:
-            - "33:80:f5:7a:73:07:39:1e:d1:c4:59:ea:5b:da:5d:12"
-      - run:
-          command: |
-            adb start-server
-            adb devices
-            adb kill-server
-            ls -la ~/.android
-          name: ADB Start Stop
-      - run:
-          # Note we are using a pixel_xl as the test device, feel free to change it for one better fits your app
-          command: |
-            export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-            avdmanager create avd --force --name Pixel_2_API_29 --package "system-images;android-29;default;x86_64" --tag default --device pixel_xl
-          name: Create Android Emulator
-      - run:
-          background: true
-          command: |
-            export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-            $ANDROID_HOME/emulator/emulator @Pixel_2_API_29 -version
-            $ANDROID_HOME/emulator/emulator @Pixel_2_API_29 -cores 2 -gpu auto
-            -accel on -memory 2048 -no-audio -no-snapshot -no-boot-anim
-            -no-window -logcat *:W | grep -i
-            'ReactNative\|com.reactnativecommunity'
-          name: Start Android Emulator (background)
-      - run:
-          command: >
-            # export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-            export BOOT=""
-            echo "Waiting for AVD to finish booting"
-            export PATH=$(dirname $(dirname $(command -v
-            android)))/platform-tools:$PATH
-            until [[ "$BOOT" =~ "1" ]]; do
-              sleep 5
-              export BOOT=$(adb -e shell getprop sys.boot_completed 2>&1)
-            done
-            sleep 15
-            adb shell settings put global window_animation_scale 0
-            adb shell settings put global transition_animation_scale 0
-            adb shell settings put global animator_duration_scale 0
-            echo "Android Virtual Device is now ready."
-          name: Wait for AVD to be ready
-          no_output_timeout: 5m
+      # - run:
+      #     # For my app and react native in general java8 is needed. The default version on this executor was default to java10 for some reason, so this kinda solve that issue.
+      #     # just installing java, android sdk, and needed tools.
+      #     command: >
+      #       echo $ANDROID_HOME
+      #       java -version
+      #       brew tap adoptopenjdk/openjdk
+      #       brew install --cask adoptopenjdk/openjdk/adoptopenjdk8
+      #       java -version
+      #       export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+      #       brew install --cask android-sdk
+      #       export ANDROID_HOME=/usr/local/share/android-sdk
+      #       export PATH=$PATH:$ANDROID_HOME/platform-tools
+      #       export PATH=$PATH:$ANDROID_HOME/tools
+      #       export PATH=$PATH:$ANDROID_HOME/tools/bin
+      #       export PATH=$PATH:$ANDROID_HOME/emulator
+      #       mkdir -p ~/.android && touch ~/.android/repositories.cfg
+      #       java -version
+      #       yes | sdkmanager "platform-tools" "tools" >/dev/null
+      #       yes | sdkmanager "platforms;android-29"
+      #       "system-images;android-29;default;x86_64" >/dev/null
+      #       yes | sdkmanager "emulator" --channel=3 >/dev/null
+      #       yes | sdkmanager "build-tools;29.0.2" >/dev/null
+      #       yes | sdkmanager --licenses >/dev/null
+      #       yes | sdkmanager --list
+      #     name: Install Android Emulator
+      #     shell: /bin/bash -e
+      # - add_ssh_keys:
+      #     fingerprints:
+      #       - "33:80:f5:7a:73:07:39:1e:d1:c4:59:ea:5b:da:5d:12"
+      # - run:
+      #     command: |
+      #       adb start-server
+      #       adb devices
+      #       adb kill-server
+      #       ls -la ~/.android
+      #     name: ADB Start Stop
+      # - run:
+      #     # Note we are using a pixel_xl as the test device, feel free to change it for one better fits your app
+      #     command: |
+      #       export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+      #       avdmanager create avd --force --name Pixel_2_API_29 --package "system-images;android-29;default;x86_64" --tag default --device pixel_xl
+      #     name: Create Android Emulator
+      # - run:
+      #     background: true
+      #     command: |
+      #       export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+      #       $ANDROID_HOME/emulator/emulator @Pixel_2_API_29 -version
+      #       $ANDROID_HOME/emulator/emulator @Pixel_2_API_29 -cores 2 -gpu auto
+      #       -accel on -memory 2048 -no-audio -no-snapshot -no-boot-anim
+      #       -no-window -logcat *:W | grep -i
+      #       'ReactNative\|com.reactnativecommunity'
+      #     name: Start Android Emulator (background)
+      # - run:
+      #     command: >
+      #       # export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+      #       export BOOT=""
+      #       echo "Waiting for AVD to finish booting"
+      #       export PATH=$(dirname $(dirname $(command -v
+      #       android)))/platform-tools:$PATH
+      #       until [[ "$BOOT" =~ "1" ]]; do
+      #         sleep 5
+      #         export BOOT=$(adb -e shell getprop sys.boot_completed 2>&1)
+      #       done
+      #       sleep 15
+      #       adb shell settings put global window_animation_scale 0
+      #       adb shell settings put global transition_animation_scale 0
+      #       adb shell settings put global animator_duration_scale 0
+      #       echo "Android Virtual Device is now ready."
+      #     name: Wait for AVD to be ready
+      #     no_output_timeout: 5m
       # Creates the detox build using the orb job
       # - detox_build_android
-      # - start_react_native
-      # - run:  |
-      #       detox test -c android --loglevel trace --record-videos all
-      # - run: node e2e/generate_cucumber_html_report
-      # - store_artifacts:
-      #     path: e2e/cucumber-report
+      - start_react_native
+      - run:  |
+            detox test -c android --loglevel trace --record-videos all
+      - run: node e2e/generate_cucumber_html_report
+      - store_artifacts:
+          path: e2e/cucumber-report
 
   detox_ios:
     executor:
