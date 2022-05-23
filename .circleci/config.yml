@@ -182,7 +182,7 @@ jobs:
       - rn/setup_macos_executor:
           homebrew_cache: true
           node_version: "12"
-    - rn/yarn_install
+      - rn/yarn_install:
           # basically because of this https://github.com/react-native-community/react-native-circleci-orb/issues/66
           cache: false
       - rn/android_emulator_start:
