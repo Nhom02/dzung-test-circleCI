@@ -177,7 +177,7 @@ jobs:
       name: rn/macos
     steps:
       - attach_workspace:
-          at: .
+          at: ~/dzung-test-circleCI
       - rn/setup_macos_executor:
           homebrew_cache: true
           node_version: "12"
