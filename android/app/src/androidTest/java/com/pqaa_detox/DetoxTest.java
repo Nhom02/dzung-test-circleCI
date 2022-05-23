@@ -24,9 +24,9 @@ public class DetoxTest {
     public void runDetoxTests() {
 
         DetoxConfig detoxConfig = new DetoxConfig();
-        detoxConfig.idlePolicyConfig.masterTimeoutSec = 90;
-        detoxConfig.idlePolicyConfig.idleResourceTimeoutSec = 60;
-        detoxConfig.rnContextLoadTimeoutSec = (com.pqaa_detox.BuildConfig.DEBUG ? 180 : 60);
+        detoxConfig.idlePolicyConfig.masterTimeoutSec = 500;
+        detoxConfig.idlePolicyConfig.idleResourceTimeoutSec = 500;
+        detoxConfig.rnContextLoadTimeoutSec = 500;
 
         Detox.runTests(mActivityRule, detoxConfig);
     }
