@@ -15,9 +15,7 @@ commands:
     steps:
       - android/restore-gradle-cache
       - run: |
-          npm install -g detox-cli react-native-cli detox
-          pwd
-          ls
+          npm install -g detox-cli react-native-cli
           detox build --configuration android
           cd android/app/build/outputs/apk && ls
       - android/save-gradle-cache
