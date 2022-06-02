@@ -178,6 +178,7 @@ jobs:
           at: ~/dzung-test-circleCI
       - checkout
       - rn/setup_macos_executor:
+          homebrew_cache: false
           node_version: "14"
       - rn/yarn_install:
           # basically because of this https://github.com/react-native-community/react-native-circleci-orb/issues/66
