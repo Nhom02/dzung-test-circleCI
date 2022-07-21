@@ -15,6 +15,7 @@ commands:
     steps:
       - android/restore-gradle-cache
       - run: |
+          mkdir -p $ANDROID_HOME/ndk-bundle/toolchains/mips64el-linux-android/prebuilt/linux-x86_64
           npm install -g detox-cli react-native-cli
           detox build --configuration android
           cd android/app/build/outputs/apk && ls
