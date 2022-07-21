@@ -294,6 +294,7 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: large
+      tag: 2022.06.1-node
     steps:
       - checkout
       - node/install-yarn
