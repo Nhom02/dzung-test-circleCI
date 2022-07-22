@@ -108,6 +108,7 @@ commands:
           command: >-
             echo no | avdmanager create avd --force --name <<parameters.device_name>>
             --package "system-images;<<parameters.platform_version>>;google_apis;x86_64"
+            --abi "x86_64"
           name: Create Android Emulator
       - run:
           background: true
@@ -115,8 +116,8 @@ commands:
             $ANDROID_HOME/emulator/emulator @<<parameters.device_name>> -version
 
             $ANDROID_HOME/emulator/emulator @<<parameters.device_name>> -cores 1
-            -gpu auto -accel on -memory 1024 -no-audio -no-snapshot -no-boot-anim
-            -no-window -logcat *:W | grep -i
+            -gpu host -accel on -memory 1024 -no-audio -no-snapshot -no-boot-anim
+            -no-window -wipe-data -logcat *:W | grep -i
             'ReactNative\|<<parameters.logcat_grep>>'
           name: Start Android Emulator (background)
       - run:
@@ -303,7 +304,7 @@ jobs:
       - checkout
       - node/install-yarn
       - rn/yarn_install
-      - rn/android_emulator_start:
+      - android_emulator_start:
           device_name: Pixel_5_API_32
           build_tools_version: 30.0.0
           platform_version: android-30
