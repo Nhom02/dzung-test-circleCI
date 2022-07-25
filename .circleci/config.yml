@@ -113,8 +113,8 @@ commands:
           command: >
             $ANDROID_HOME/emulator/emulator @<<parameters.device_name>> -version
 
-            $ANDROID_HOME/emulator/emulator @<<parameters.device_name>> -cores 1
-            -gpu host -accel on -memory 1024 -no-audio -no-snapshot -no-boot-anim
+            $ANDROID_HOME/emulator/emulator @<<parameters.device_name>> -cores 2
+            -gpu host -accel on -memory 2048 -no-audio -no-snapshot -no-boot-anim
             -no-window -wipe-data -logcat *:W | grep -i
             'ReactNative\|<<parameters.logcat_grep>>'
           name: Start Android Emulator (background)
