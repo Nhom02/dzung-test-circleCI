@@ -315,6 +315,9 @@ jobs:
       - run: node e2e/generate_cucumber_html_report
       - store_artifacts:
           path: e2e/cucumber-report
+      - store_artifacts:
+          name: Upload Detox logs
+          path: artifacts
 
 workflows:
   e2e:
