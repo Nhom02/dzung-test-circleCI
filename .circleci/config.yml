@@ -13,7 +13,6 @@ commands:
 
   detox_build_android:
     steps:
-      - android/restore-gradle-cache
       - run: |
           echo $ANDROID_HOME
           echo $ANDROID_NDK_HOME
@@ -22,7 +21,6 @@ commands:
           npm install -g detox-cli react-native-cli
           detox build --configuration android
           cd android/app/build/outputs/apk && ls
-      - android/save-gradle-cache
 
   start_react_native:
     steps:
