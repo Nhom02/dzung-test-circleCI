@@ -109,6 +109,15 @@ commands:
             --abi "x86_64"
           name: Create Android Emulator
       - run:
+          command: >
+            echo "hw.lcd.density=440" >> ~/.android/avd/<<parameters.device_name>>.avd/config.ini
+
+            echo "hw.lcd.height=2340" >> ~/.android/avd/<<parameters.device_name>>.avd/config.ini
+
+            echo "hw.lcd.width=1080" >> ~/.android/avd/<<parameters.device_name>>.avd/config.ini
+          name: Set Screen dimensions
+
+      - run:
           background: true
           command: >
             $ANDROID_HOME/emulator/emulator @<<parameters.device_name>> -version
