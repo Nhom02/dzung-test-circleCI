@@ -303,6 +303,10 @@ jobs:
           path: e2e/cucumber-json
 
   detox_android_2:
+    parameters:
+      test_env:
+        default: qa
+        type: string
     executor:
       name: android/android-machine
       resource-class: large
@@ -329,7 +333,10 @@ jobs:
 workflows:
   e2e:
     jobs:
-      - detox_android_2
+      detox_android_2:
+        matrix:
+          parameters:
+            test_env: ["qa", "qa2"]
       # - detox_ios:
       #     filters:
       #       branches:
