@@ -307,6 +307,10 @@ jobs:
       test_env:
         default: qa
         type: string
+      test_slug:
+        default: detox-e2e-automation-us
+        type: string
+      
     executor:
       name: android/android-machine
       resource-class: large
@@ -337,6 +341,7 @@ workflows:
         matrix:
           parameters:
             test_env: ["qa", "qa2"]
+            test_slug: ["detox-e2e-automation-us"]
       # - detox_ios:
       #     filters:
       #       branches:
