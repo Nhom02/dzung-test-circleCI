@@ -349,7 +349,7 @@ jobs:
       - run:
           name: Generate Multiple Cucumber HTML Reporter
           command: |
-            node node e2e/generate_cucumber_html_report
+            node e2e/generate_cucumber_html_report
           when: always
       - store_artifacts:
           path: e2e/cucumber-report
