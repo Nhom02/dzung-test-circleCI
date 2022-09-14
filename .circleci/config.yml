@@ -326,11 +326,14 @@ jobs:
       - start_react_native
       - run:  |
             detox test -c android --loglevel trace --record-videos all
-      - run: node e2e/generate_cucumber_html_report
-      - store_artifacts:
-          path: e2e/cucumber-report
+      # - run: node e2e/generate_cucumber_html_report
+      # - store_artifacts:
+      #     path: e2e/cucumber-report
       - persist_to_workspace:
-          root: e2e/cucumber-json
+          root: e2e
+          paths:
+            - cucumber-json
+
 
   e2e-generate-html-reports:
     executor:
@@ -342,7 +345,7 @@ jobs:
       - node/install-yarn
       - rn/yarn_install
       - attach_workspace:
-          at: e2e/cucumber-json
+          at: e2e
       - run:
           name: Generate Multiple Cucumber HTML Reporter
           command: |
