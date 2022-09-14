@@ -329,13 +329,35 @@ jobs:
       - run: node e2e/generate_cucumber_html_report
       - store_artifacts:
           path: e2e/cucumber-report
+      - persist_to_workspace:
+          root: e2e/cucumber-json
+
+  e2e-generate-html-reports:
+    executor:
+      name: android/android-machine
+      resource-class: large
+      tag: 2022.06.1
+    steps:
+      - checkout
+      - node/install-yarn
+      - rn/yarn_install
+      - attach_workspace:
+          at: e2e/cucumber-json
+      - run:
+          name: Generate Multiple Cucumber HTML Reporter
+          command: |
+            node node e2e/generate_cucumber_html_report
+          when: always
       - store_artifacts:
-          name: Upload Detox logs
-          path: artifacts
+          path: e2e/cucumber-report
+
 
 workflows:
   e2e:
     jobs:
+      - e2e-generate-html-reports:
+          requires:
+            - detox_android_2
       - detox_android_2:
           matrix:
             parameters:
