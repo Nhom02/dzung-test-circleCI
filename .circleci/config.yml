@@ -88,6 +88,20 @@ commands:
             adb kill-server
             ls -la ~/.android
           name: ADB Start Stop
+      - run:
+          command: >-
+            echo no | avdmanager create avd --force --name <<parameters.device_name>>
+            --package "system-images;<<parameters.platform_version>>;google_apis;x86_64"
+            --abi "x86_64"
+          name: Create Android Emulator
+      - run:
+          command: >
+            echo "hw.lcd.density=440" >> ~/.android/avd/<<parameters.device_name>>.avd/config.ini
+
+            echo "hw.lcd.height=2340" >> ~/.android/avd/<<parameters.device_name>>.avd/config.ini
+
+            echo "hw.lcd.width=1080" >> ~/.android/avd/<<parameters.device_name>>.avd/config.ini
+          name: Set Screen dimensions
 
   android_emulator_start:
     description: Installs and starts an Android emulator with the given version and name.
@@ -112,21 +126,6 @@ commands:
           "android-28".
         type: string
     steps:
-      - run:
-          command: >-
-            echo no | avdmanager create avd --force --name <<parameters.device_name>>
-            --package "system-images;<<parameters.platform_version>>;google_apis;x86_64"
-            --abi "x86_64"
-          name: Create Android Emulator
-      - run:
-          command: >
-            echo "hw.lcd.density=440" >> ~/.android/avd/<<parameters.device_name>>.avd/config.ini
-
-            echo "hw.lcd.height=2340" >> ~/.android/avd/<<parameters.device_name>>.avd/config.ini
-
-            echo "hw.lcd.width=1080" >> ~/.android/avd/<<parameters.device_name>>.avd/config.ini
-          name: Set Screen dimensions
-
       - run:
           background: true
           command: >
@@ -340,12 +339,12 @@ jobs:
       - android_create_emulator:
           build_tools_version: 30.0.0
           platform_version: android-32
-      - android_emulator_start:
-          device_name: Pixel_5_API_32_1
-          platform_version: android-32
-      - android_emulator_start:
-          device_name: Pixel_5_API_32_2
-          platform_version: android-32
+      # - android_emulator_start:
+      #     device_name: Pixel_5_API_32_1
+      #     platform_version: android-32
+      # - android_emulator_start:
+      #     device_name: Pixel_5_API_32_2
+      #     platform_version: android-32
       # - run:
       #     command: |
       #       adb devices
