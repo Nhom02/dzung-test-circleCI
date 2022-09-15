@@ -379,10 +379,9 @@ workflows:
           requires:
             - detox_android_2
       - detox_android_2:
-          matrix:
-            parameters:
-              test_env: ["qa"]
-              test_slug: ["detox-e2e-automation-us"]
+          parameters:
+            test_env: ["qa"]
+            test_slug: ["detox-e2e-automation-us"]
       # - detox_ios:
       #     filters:
       #       branches:
