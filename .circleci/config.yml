@@ -52,6 +52,12 @@ commands:
   android_create_emulator:
     description: Installs an Anroid emulator with the given version and name.
     parameters:
+      device_name:
+        default: TestingAVD
+        description: >-
+          The name of the AVD. You use this name to tell which device to run tests
+          on.
+        type: string
       build_tools_version:
         default: 28.0.3
         description: The version of the Android build tools to install.
