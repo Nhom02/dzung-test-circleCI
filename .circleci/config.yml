@@ -152,7 +152,7 @@ commands:
 
             until [[ "$BOOT" =~ "2" ]]; do
               sleep 5
-              export BOOT=$(adb -e shell getprop sys.boot_completed 2>&1)
+              export BOOT=$(adb -s emulator-5554 shell getprop sys.boot_completed 2>&1)
             done
 
             sleep 15
@@ -165,7 +165,7 @@ commands:
 
             echo "Android Virtual Device is now ready."
           name: Wait for AVD to be ready
-          no_output_timeout: 8m
+          no_output_timeout: 5m
 
 jobs:
   setup_node:
