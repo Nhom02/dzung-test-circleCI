@@ -344,6 +344,7 @@ jobs:
       - android_emulator_start:
           device_name: Pixel_5_API_32_2
           platform_version: android-32
+      - wait_for_avd_to_be_ready
       - run:
           command: |
             adb devices
