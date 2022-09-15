@@ -49,26 +49,12 @@ commands:
           paths:
             - ios/build/Build
 
-
-  android_emulator_start:
-    description: Installs and starts an Android emulator with the given version and name.
+  android_create_emulator:
+    description: Installs an Anroid emulator with the given version and name.
     parameters:
       build_tools_version:
         default: 28.0.3
         description: The version of the Android build tools to install.
-        type: string
-      device_name:
-        default: TestingAVD
-        description: >-
-          The name of the AVD. You use this name to tell which device to run tests
-          on.
-        type: string
-      logcat_grep:
-        default: com.reactnativecommunity
-        description: >-
-          ADB logs will be shown in the "Start Android Emulator" commands, but we
-          filter it using grep to avoid noise. You can specify additional strings to
-          grep for. Make sure you escape special characters.
         type: string
       platform_version:
         default: android-28
@@ -102,6 +88,24 @@ commands:
             adb kill-server
             ls -la ~/.android
           name: ADB Start Stop
+
+  android_emulator_start:
+    description: Installs and starts an Android emulator with the given version and name.
+    parameters:
+      device_name:
+        default: TestingAVD
+        description: >-
+          The name of the AVD. You use this name to tell which device to run tests
+          on.
+        type: string
+      logcat_grep:
+        default: com.reactnativecommunity
+        description: >-
+          ADB logs will be shown in the "Start Android Emulator" commands, but we
+          filter it using grep to avoid noise. You can specify additional strings to
+          grep for. Make sure you escape special characters.
+        type: string
+    steps:
       - run:
           command: >-
             echo no | avdmanager create avd --force --name <<parameters.device_name>>
@@ -321,14 +325,14 @@ jobs:
       - checkout
       - node/install-yarn
       - rn/yarn_install
-      - android_emulator_start:
-          device_name: Pixel_5_API_32_1
+      - android_create_emulator:
           build_tools_version: 30.0.0
-          platform_version: android-29
+          platform_version: android-32
       - android_emulator_start:
-          device_name: Pixel_5_API_32_2
-          build_tools_version: 30.0.0
-          platform_version: android-29
+          device_name: Pixel_5_API_32
+      - run:
+          command: |
+            adb devices
       # - detox_build_android
       # - start_react_native
       # - run:  |
@@ -336,10 +340,10 @@ jobs:
       # - run: node e2e/generate_cucumber_html_report
       # - store_artifacts:
       #     path: e2e/cucumber-report
-      - persist_to_workspace:
-          root: e2e
-          paths:
-            - cucumber-json
+      # - persist_to_workspace:
+      #     root: e2e
+      #     paths:
+      #       - cucumber-json
 
 
   e2e-generate-html-reports:
