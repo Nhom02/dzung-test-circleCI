@@ -321,10 +321,14 @@ jobs:
       - checkout
       - node/install-yarn
       - rn/yarn_install
-      # - android_emulator_start:
-      #     device_name: Pixel_5_API_32
-      #     build_tools_version: 30.0.0
-      #     platform_version: android-29
+      - android_emulator_start:
+          device_name: Pixel_5_API_32_1
+          build_tools_version: 30.0.0
+          platform_version: android-29
+      - android_emulator_start:
+          device_name: Pixel_5_API_32_2
+          build_tools_version: 30.0.0
+          platform_version: android-29
       # - detox_build_android
       # - start_react_native
       # - run:  |
@@ -364,12 +368,8 @@ workflows:
       - detox_android_2:
           matrix:
             parameters:
-              test_env: ["qa", "qa2"]
+              test_env: ["qa"]
               test_slug: ["detox-e2e-automation-us"]
-              test_config: ["config1", "config2"]
-            exclude:
-              - test_env: "qa"
-                test_config: "config2"
       # - detox_ios:
       #     filters:
       #       branches:
