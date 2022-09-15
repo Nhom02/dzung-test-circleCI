@@ -154,6 +154,7 @@ commands:
               sleep 5
               export BOOT=$(adb -s emulator-5554 shell getprop sys.boot_completed 2>&1)
               echo $BOOT
+              adb devices
             done
 
             sleep 15
@@ -345,6 +346,9 @@ jobs:
       - android_emulator_start:
           device_name: Pixel_5_API_32_2
           platform_version: android-32
+      - run:
+          command: |
+            adb devices
       - wait_for_avd_to_be_ready
       - run:
           command: |
