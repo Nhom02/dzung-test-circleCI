@@ -105,6 +105,12 @@ commands:
           filter it using grep to avoid noise. You can specify additional strings to
           grep for. Make sure you escape special characters.
         type: string
+      platform_version:
+        default: android-28
+        description: >-
+          The version of android to run on the emulator. Usually in the form of
+          "android-28".
+        type: string
     steps:
       - run:
           command: >-
@@ -330,6 +336,7 @@ jobs:
           platform_version: android-32
       - android_emulator_start:
           device_name: Pixel_5_API_32
+          platform_version: android-32
       - run:
           command: |
             adb devices
