@@ -335,8 +335,10 @@ jobs:
           build_tools_version: 30.0.0
           platform_version: android-32
       - android_emulator_start:
-          device_name: Pixel_5_API_32
-          platform_version: android-32
+          matrix:
+            parameters:
+              device_name: ["Pixel_5_API_32_1", "Pixel_5_API_32_2"]
+              platform_version: android-32
       - run:
           command: |
             adb devices
