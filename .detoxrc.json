@@ -23,7 +23,7 @@
     "emulator": {
       "type": "android.emulator",
       "device": {
-        "avdName": "Pixel_5_API_32_1"
+        "avdName": "Pixel_5_API_32"
       }
     }
   },
