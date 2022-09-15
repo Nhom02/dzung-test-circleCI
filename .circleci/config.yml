@@ -150,7 +150,7 @@ commands:
             export PATH=$(dirname $(dirname $(command -v
             android)))/platform-tools:$PATH
 
-            until [[ "$BOOT" =~ "1" ]]; do
+            until [[ "$BOOT" =~ "2" ]]; do
               sleep 5
               export BOOT=$(adb -e shell getprop sys.boot_completed 2>&1)
             done
