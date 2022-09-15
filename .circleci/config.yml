@@ -139,7 +139,8 @@ commands:
           name: Start Android Emulator (background)
 
   wait_for_avd_to_be_ready:
-    description: Wait for AVD to be ready
+    description: Wait for AVD to be 
+    steps:
       - run:
           command: >
             export BOOT=""
