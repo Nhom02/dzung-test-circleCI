@@ -125,12 +125,6 @@ commands:
           filter it using grep to avoid noise. You can specify additional strings to
           grep for. Make sure you escape special characters.
         type: string
-      platform_version:
-        default: android-28
-        description: >-
-          The version of android to run on the emulator. Usually in the form of
-          "android-28".
-        type: string
     steps:
       - run:
           background: true
@@ -164,11 +158,11 @@ commands:
 
             sleep 15
 
-            adb shell settings put global window_animation_scale 0
+            adb -s emulator-5554 shell settings put global window_animation_scale 0
 
-            adb shell settings put global transition_animation_scale 0
+            adb -s emulator-5554 shell settings put global transition_animation_scale 0
 
-            adb shell settings put global animator_duration_scale 0
+            adb -s emulator-5554 shell settings put global animator_duration_scale 0
 
             echo "Android Virtual Device is now ready."
           name: Wait for AVD to be ready
@@ -346,19 +340,17 @@ jobs:
           device_name: Pixel_5_API_32
           build_tools_version: 30.0.0
           platform_version: android-32
-      # - android_emulator_start:
-      #     device_name: Pixel_5_API_32_1
-      #     platform_version: android-32
-      # - android_emulator_start:
-      #     device_name: Pixel_5_API_32_2
-      #     platform_version: android-32
-      # - run:
-      #     command: |
-      #       adb devices
-      # - wait_for_avd_to_be_ready
-      # - run:
-      #     command: |
-      #       adb devices
+      - android_emulator_start:
+          device_name: Pixel_5_API_32
+      - android_emulator_start:
+          device_name: Pixel_5_API_32
+      - run:
+          command: |
+            adb devices
+      - wait_for_avd_to_be_ready
+      - run:
+          command: |
+            adb devices
       - detox_build_android
       - start_react_native
       - run:  |
