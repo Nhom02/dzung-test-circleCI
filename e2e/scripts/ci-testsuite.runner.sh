@@ -20,7 +20,7 @@ do
 done
 
 # Print helpFunction in case parameters are empty
-if [ -z "$PARAMTESTENV" ] || [ -z "$PARAMTESLUG" ] || [ -z "$PARAMTESTSUITE" ]
+if [ -z "$PARAMTESTENV" ] || [ -z "$PARAMTESTSLUG" ] || [ -z "$PARAMTESTSUITE" ]
 then
    echo "Some or all of the parameters are empty";
    helpFunction
@@ -29,7 +29,7 @@ fi
 # Begin script in case all parameters are correct
 echo ""
 echo "Test Environment:\t $PARAMTESTENV"
-echo "Test Slug Name :\t $PARAMTESLUG"
+echo "Test Slug Name :\t $PARAMTESTSLUG"
 echo "Test Suite Name :\t $PARAMTESTSUITE"
 echo "Test Working Dir:\t $PWD"
 
