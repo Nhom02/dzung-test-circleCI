@@ -325,9 +325,9 @@ jobs:
       test_slug:
         default: detox-e2e-automation-us
         type: string
-      test_config:
+      test_suite:
         type: string
-        default: config1
+        default: all
     executor:
       name: android/android-machine
       resource-class: large
@@ -336,25 +336,29 @@ jobs:
       - checkout
       - node/install-yarn
       - rn/yarn_install
-      - android_create_emulator:
-          device_name: Pixel_5_API_32
-          build_tools_version: 30.0.0
-          platform_version: android-32
-      - android_emulator_start:
-          device_name: Pixel_5_API_32
-      - android_emulator_start:
-          device_name: Pixel_5_API_32
+      # - android_create_emulator:
+      #     device_name: Pixel_5_API_32
+      #     build_tools_version: 30.0.0
+      #     platform_version: android-32
+      # - android_emulator_start:
+      #     device_name: Pixel_5_API_32
+      # - android_emulator_start:
+      #     device_name: Pixel_5_API_32
+      # - run:
+      #     command: |
+      #       adb devices
+      # - wait_for_avd_to_be_ready
+      # - run:
+      #     command: |
+      #       adb devices
+      # - detox_build_android
+      # - start_react_native
       - run:
+          name: Run E2E Cypress
           command: |
-            adb devices
-      - wait_for_avd_to_be_ready
-      - run:
-          command: |
-            adb devices
-      - detox_build_android
-      - start_react_native
-      - run:  |
-            detox test -c android --loglevel trace --record-videos all
+            sh ./e2e/scripts/ci-testsuite.runner.sh -a << parameters.test_env >> -b << parameters.test_slug >> -c << parameters.test_suite >>
+      # - run:  |
+      #       detox test -c android --loglevel trace --record-videos all
       # - run: node e2e/generate_cucumber_html_report
       # - store_artifacts:
       #     path: e2e/cucumber-report
