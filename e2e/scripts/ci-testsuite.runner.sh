@@ -50,14 +50,12 @@ elif [ "$PARAMTESTSUITE" = "tracking" ]; then
   CYPRESS_SPECS="$SPECS_TRACKING"
 elif [ "$PARAMTESTSUITE" = "planning" ]; then
   CYPRESS_SPECS="$SPECS_PLANNING"
+elif [ "$PARAMTESTSUITE" = "all" ]; then
+  CYPRESS_SPECS="$SPECS_PLANNING"
 else
   echo "\tERROR: \"$PARAMTESTSUITE\" test suite was not defined!"
   exit 1 # Exit script if test suite was not defined!
 fi
-
-# Setup - Make the cucumber-json-formatter file executable
-echo "2. Setup - Make the cucumber-json-formatter file executable"
-chmod +x ./tools/cucumber/linux/cucumber-json-formatter
 
 # Run cypress
 echo "3. Starting - Run Cypress! $CYPRESS_SPECS"
