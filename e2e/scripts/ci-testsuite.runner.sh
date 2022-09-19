@@ -65,7 +65,7 @@ echo "3. Starting - Run Cypress! $CYPRESS_SPECS"
 #   --configuration "$PARAMTESTENV" \
 #   --e2e \
 #   --spec "$CYPRESS_SPECS"
-detox test -c android --loglevel trace --record-videos all
+detox test -c android --loglevel trace --record-videos all $PARAMTESTENV
 echo "Debug $?"
 
 # Force - Exit code 0 - with echo at the last command
