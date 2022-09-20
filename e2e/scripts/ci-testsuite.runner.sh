@@ -41,6 +41,9 @@ SPECS_MASTER_DATA="**/e2e/manage/**/*.feature"
 SPECS_OPTIMISE="**/e2e/optimise/**/*.feature"
 SPECS_TRACKING="**/e2e/live_tracking/**/*.feature"
 SPECS_PLANNING="!(**/e2e/(manage|optimise|live_tracking)/**/*).feature"
+RANDOMSTRING = `"$RANDOM" | md5sum | head -c 20`;
+echo $RANDOMSTRING;
+echo "$RANDOMSTRING";
 echo $RANDOM; echo;
 echo $RANDOM | md5sum | head -c 20; echo;
 echo md5sum | head -c 20; echo;
