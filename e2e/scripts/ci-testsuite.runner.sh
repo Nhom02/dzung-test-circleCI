@@ -42,6 +42,7 @@ SPECS_OPTIMISE="**/e2e/optimise/**/*.feature"
 SPECS_TRACKING="**/e2e/live_tracking/**/*.feature"
 SPECS_PLANNING="!(**/e2e/(manage|optimise|live_tracking)/**/*).feature"
 echo "$RANDOM"
+echo $((1 + $RANDOM % 10))
 
 if [ "$PARAMTESTSUITE" = "master-data" ]; then
   CYPRESS_SPECS="$SPECS_MASTER_DATA"
